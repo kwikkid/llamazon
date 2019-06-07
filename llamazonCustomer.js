@@ -24,7 +24,9 @@ function placeOrder() {
 		console.log("Here's our current inventory");
 		console.log("------------------------------------------");
 		for (var i = 0; i < res.length; i++) {
-			console.table(res[i].id + " " + res[i].product_name);
+			console.table(
+				res[i].id + " " + res[i].product_name + " " + "$" + res[i].price
+			);
 		}
 		console.log("------------------------------------------");
 		inquirer
