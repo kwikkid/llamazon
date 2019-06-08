@@ -6,7 +6,7 @@ var connection = mysql.createConnection({
 	host: "localhost",
 	port: 3306,
 	user: "root",
-	password: "",
+	password: "password",
 	database: "llamazon"
 });
 
@@ -44,7 +44,7 @@ function manageStore() {
 					break;
 
 				case "Add New Product":
-					// addProduct();
+					addProduct();
 					break;
 
 				case "Exit":
@@ -101,28 +101,22 @@ function addInventory() {
 			}
 		])
 		.then(function(answer) {
-			var products = checkInventory(parseInt(answer.product), inventory);
+			var productId = parseInt(answer.product);
+			var products = checkInventory(productId, inventory);
 			console.log("Products: " + products);
 			if (products) {
 				promptForQuantity(products);
 			} else {
-				console.log("wrong id");
+				console.log("Sorry, you intered an invalid id.");
 				manageStore();
 			}
 		});
 }
 
 function checkInventory(id, inventory) {
-	console.log("Inside the checkInventory function");
-	console.log("Inventory length:" + inventory.length);
 	for (var i = 0; i < inventory.length; i++) {
-		console.log("2nd id: " + inventory[1].id);
-		console.log(inventory[i].id);
 		if (inventory[i].id == id) {
-			console.log("match id");
 			return inventory[i];
-		} else {
-			return null;
 		}
 	}
 }
@@ -143,6 +137,50 @@ function promptForQuantity(products) {
 				[products.stock_quantity + quantity, products.id],
 				function(err, res) {
 					console.log("Successfully added quantity");
+					viewProducts();
+				}
+			);
+		});
+}
+
+function addProduct() {
+	inquirer
+		.prompt([
+			{
+				name: "newProduct",
+				type: "input",
+				message:
+					"What is the name of the new product you'd like to add?"
+			},
+			{
+				name: "quantity",
+				type: "input",
+				message:
+					"How much of this item are you adding to your inventory?"
+				// validate:
+			},
+			{
+				name: "price",
+				type: "input",
+				message: "What is the unit price of this item?"
+				// validate:
+			},
+			{
+				name: "department",
+				type: "input",
+				message: "What department does this item belong in?"
+			}
+		])
+		.then(function(answer) {
+			connection.add(
+				"INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ? ? ? ?",
+				[
+					answer.newProduct,
+					answer.quantity,
+					answer.price,
+					answer.department
+				],
+				function(err, res) {
 					viewProducts();
 				}
 			);

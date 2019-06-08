@@ -7,3 +7,5 @@ Run the llamazonCustomer.js file using node and select the item you'd like to pu
 This application uses node, mysql, inquirer, and console.table packages
 
 ![](llamazon.gif)
+
+![](llamazonmanager.gif)
